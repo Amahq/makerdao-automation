@@ -1,19 +1,10 @@
-import {
-    fetchJobs,
-    checkWorkable,
-    testJobWithNetwork,
-    listNetworks,
-    fetchNetworkWindow,
-    getTotalWindowSize,
-    getMasterNetwork,
-    verifyIsMaster,
-    verifyIsMasterForJob,
-    fetchJobTimer,
-    fetchLerpFactoryCount,
-    testAllJobs,
-} from './blockchain';
+import { getMasterNetwork, listNetworks } from './modules/sequencer';
+import { testAllJobs, testJobWithNetwork } from './tests/testJobs';
+import { fetchLerpFactoryCount } from './modules/utils';
+import { fetchNetworkWindow, getTotalWindowSize } from './modules/networks';
+import { fetchJobs, getNextJobs } from './modules/jobs';
 
-import { Address } from 'viem';
+import { Address, Hex } from 'viem';
 
 async function main() {
     // Define the job address and LerpFactory address
@@ -38,8 +29,8 @@ async function main() {
         const activeNetwork = await getMasterNetwork();
         console.log(`Active Master Network: ${activeNetwork}\n`);
 
-        console.log('\n--- Starting Job Checks for All Addresses ---\n');
-        await testAllJobs(jobAddresses);
+        console.log("trying to get the nextjobs ");
+        await getNextJobs(activeNetwork);
 
         // Fetch the LerpFactory count
         console.log(`\n--- Fetching LerpFactory Count for: ${lerpFactoryAddress} ---`);
@@ -61,11 +52,14 @@ async function main() {
         console.log('Fetching jobs...');
         const jobs = await fetchJobs();
 
-        console.log(`Testing all jobs with the active master network: ${activeNetwork}`);
+        console.log('\n--- Starting Job Checks for All Addresses ---\n');
+        await testAllJobs(jobAddresses);
+
+        /* console.log(`Testing all jobs with the active master network: ${activeNetwork}`);
         for (const job of jobs) {
             console.log(`Testing job ${job}...`);
-            await testJobWithNetwork(job, activeNetwork);
-        }
+            await testJobWithNetwork(job, activeNetwork as Hex);
+        } */
     } catch (error) {
         console.error('An unexpected error occurred:', error);
     }

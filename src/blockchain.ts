@@ -1,7 +1,7 @@
 import { createPublicClient, http, Address, Abi, stringToHex, padHex, Hex } from 'viem';
 import { mainnet } from 'viem/chains';
 import dotenv from 'dotenv';
-module.exports = {
+/* module.exports = {
     listNetworks,
     getMasterNetwork,
     testJobWithNetwork,
@@ -14,7 +14,7 @@ module.exports = {
     fetchJobTimer,
     fetchLerpFactoryCount,
     testAllJobs,
-};
+}; */
 
 
 dotenv.config();
@@ -66,7 +66,7 @@ const sequencerAbi = [
         inputs: [{ name: 'index', type: 'uint256' }],
         outputs: [{ type: 'bytes32' }],
     },
-] as const satisfies Abi; //que significa esto !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
+] as const satisfies Abi;
 
 
 // Job contract ABI
@@ -81,12 +81,12 @@ const jobAbi = [
             { name: 'args', type: 'bytes' },
         ],
     },
-] as const satisfies Abi; //que significa esto !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
+] as const satisfies Abi;
 
 /**
  * Fetches all registered networks and their window details from the Sequencer contract.
  */
-export async function listNetworks(): Promise<string[]> {
+/* export async function listNetworks(): Promise<string[]> {
     const networks: string[] = [];
     try {
         const totalNetworks = await client.readContract({
@@ -115,7 +115,7 @@ export async function listNetworks(): Promise<string[]> {
         console.error('Error fetching networks:', error);
     }
     return networks;
-};
+}; */
 
 
 
@@ -123,7 +123,7 @@ export async function listNetworks(): Promise<string[]> {
  * Fetches the current master network name from the Sequencer contract.
  * @returns Promise<string> - The current master network name as a decoded string.
  */
-export async function getMasterNetwork(): Promise<string> {
+/* export async function getMasterNetwork(): Promise<string> {
     try {
         const masterNetwork = await client.readContract({
             address: sequencerAddress,
@@ -141,14 +141,14 @@ export async function getMasterNetwork(): Promise<string> {
         console.error('Error fetching master network:', error);
         throw new Error('Unable to fetch master network');
     }
-}
+} */
 
 /**
  * Tests if a job is workable for a specific network name.
  * @param jobAddress - Address of the job contract.
  * @param networkName - Name of the network to test.
  */
-export async function testJobWithNetwork(jobAddress: Address, networkName: string): Promise<void> {
+/* export async function testJobWithNetwork(jobAddress: Address, networkName: string): Promise<void> {
     try {
 
         const network = networkName as Hex;
@@ -167,13 +167,13 @@ export async function testJobWithNetwork(jobAddress: Address, networkName: strin
     } catch (error) {
         console.error(`Error testing job ${jobAddress} with network ${networkName}:`, error);
     }
-}
+} */
 
 /**
  * Fetches the window configuration for a specific network.
  * @param networkName - The name of the network to check.
  */
-export async function fetchNetworkWindow(networkName: string): Promise<void> {
+/* export async function fetchNetworkWindow(networkName: string): Promise<void> {
     try {
         const network = networkName as Hex;
 
@@ -201,9 +201,9 @@ export async function fetchNetworkWindow(networkName: string): Promise<void> {
     } catch (error) {
         console.error(`Error fetching window for network ${networkName}:`, error);
     }
-}
+} */
 
-export async function getTotalWindowSize(): Promise<void> {
+/* export async function getTotalWindowSize(): Promise<void> {
     try {
         const totalWindowSize = await client.readContract({
             address: sequencerAddress,
@@ -224,23 +224,23 @@ export async function getTotalWindowSize(): Promise<void> {
         console.error('Error fetching total window size:', error);
     }
 }
-
+ */
 
 /**
  * Checks if an address is a deployed contract by verifying its bytecode.
  * @param address - The Ethereum address to check.
  * @returns Promise<boolean> - True if the address has deployed bytecode, otherwise false.
  */
-export async function isContract(address: Address): Promise<boolean> {
+/* export async function isContract(address: Address): Promise<boolean> {
     const code = await client.getCode({ address });
     return code !== undefined && code !== '0x';
-}
+} */
 
 /**
  * Fetches the list of job addresses from the Sequencer contract.
  * @returns Promise<Address[]> - A list of valid job contract addresses.
  */
-export async function fetchJobs(): Promise<Address[]> {
+/* export async function fetchJobs(): Promise<Address[]> {
     const jobCount = await client.readContract({
         address: sequencerAddress,
         abi: sequencerAbi,
@@ -272,16 +272,16 @@ export async function fetchJobs(): Promise<Address[]> {
     }
 
     return jobs;
-}
+} */
 
 /**
  * Checks if a job is workable by dynamically fetching the current master network.
  * @param jobAddress - Address of the job contract.
  * @returns Promise<boolean> - True if the job is workable, false otherwise.
  */
-export async function checkWorkable(jobAddress: Address): Promise<boolean> {
+/* export async function checkWorkable(jobAddress: Address): Promise<boolean> {
     try {
-        // Encode KEEP3R as the network
+
         const activeNetwork = await getMasterNetwork();
         const network = padHex(stringToHex(activeNetwork), { size: 32 });
 
@@ -299,13 +299,13 @@ export async function checkWorkable(jobAddress: Address): Promise<boolean> {
         console.error(`Error checking workable for job ${jobAddress}:`, error);
         return false;
     }
-}
+} */
 
 /**
  * Checks if a network is recognized as the master network in the Sequencer.
  * @param networkName - The name of the network to check.
  */
-export async function verifyIsMaster(networkName: string): Promise<void> {
+/* export async function verifyIsMaster(networkName: string): Promise<void> {
     try {
 
         const network = networkName as Hex;
@@ -329,9 +329,9 @@ export async function verifyIsMaster(networkName: string): Promise<void> {
     } catch (error) {
         console.error(`Error verifying isMaster for network ${networkName}:`, error);
     }
-}
+} */
 
-export async function verifyIsMasterForJob(jobAddress: Address, networkName: string): Promise<void> {
+/* export async function verifyIsMasterForJob(jobAddress: Address, networkName: string): Promise<void> {
     try {
         const network = networkName as Hex;
         console.log('verifyIsMasterForJob - ', network);
@@ -354,9 +354,9 @@ export async function verifyIsMasterForJob(jobAddress: Address, networkName: str
     } catch (error) {
         console.error(`Error checking isMaster for network ${networkName}:`, error);
     }
-}
+} */
 
-export async function fetchJobTimer(jobAddress: Address): Promise<void> {
+/* export async function fetchJobTimer(jobAddress: Address): Promise<void> {
     try {
         // Check if the `last` function exists in the contract
         const hasLastFunction = await client.simulateContract({
@@ -416,11 +416,11 @@ export async function fetchJobTimer(jobAddress: Address): Promise<void> {
     } catch (error) {
         console.error(`Error fetching timer details for job ${jobAddress}:`, error);
     }
-}
+} */
 
 
 
-export async function fetchLerpFactoryCount(lerpFactoryAddress: Address): Promise<void> {
+/* export async function fetchLerpFactoryCount(lerpFactoryAddress: Address): Promise<void> {
     try {
         const count = await client.readContract({
             address: lerpFactoryAddress,
@@ -440,13 +440,13 @@ export async function fetchLerpFactoryCount(lerpFactoryAddress: Address): Promis
     } catch (error) {
         console.error('Error fetching LerpFactory count:', error);
     }
-}
+} */
 
 /**
  * Tests an array of job addresses with the current master network.
  * @param jobAddresses - An array of job addresses to test.
  */
-export async function testAllJobs(jobAddresses: Address[]): Promise<void> {
+/* export async function testAllJobs(jobAddresses: Address[]): Promise<void> {
     try {
         // Fetch the active master network
         const activeNetwork = await getMasterNetwork();
@@ -470,4 +470,4 @@ export async function testAllJobs(jobAddresses: Address[]): Promise<void> {
     } catch (error) {
         console.error('Error while testing jobs:', error);
     }
-}
+} */
