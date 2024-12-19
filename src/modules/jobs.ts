@@ -5,6 +5,27 @@ import { getMasterNetwork } from './sequencer';
 import { promises } from 'dns';
 import { workableJob } from '../Entities/workableJob';
 
+
+export async function fetchWorkEvents(jobAddresses: Address[], fromBlock: bigint, toBlock: bigint) {
+
+    const logs = await client.getLogs({
+        address: jobAddresses,
+        event: {
+            type: 'event', // Specify the type as 'event'
+            name: 'Work',
+            inputs: [
+                { type: 'bytes32', indexed: true }, // Network (indexed in the Solidity event)
+                { type: 'bytes32', indexed: true }, // Ilk (indexed in the Solidity event)
+            ],
+        },
+        fromBlock,
+        toBlock,
+    });
+    console.log("fetchWorkEvents - ", logs);
+    return logs;
+}
+
+
 export async function fetchJobTimer(jobAddress: Address): Promise<void> {
     try {
         // Check if the `last` function exists in the contract

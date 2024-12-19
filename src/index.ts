@@ -33,20 +33,20 @@ async function main() {
         await getNextJobs(activeNetwork);
 
         // Fetch the LerpFactory count
-        console.log(`\n--- Fetching LerpFactory Count for: ${lerpFactoryAddress} ---`);
-        await fetchLerpFactoryCount(lerpFactoryAddress);
+        //console.log(`\n--- Fetching LerpFactory Count for: ${lerpFactoryAddress} ---`);
+        //await fetchLerpFactoryCount(lerpFactoryAddress);
 
         // List all networks configured in the Sequencer
-        console.log('Listing all registered networks...');
-        await listNetworks();
+        //console.log('Listing all registered networks...');
+        //await listNetworks();
 
         // Fetch window configuration for the current active network
-        console.log(`Fetching window configuration for network: ${activeNetwork}...`);
-        await fetchNetworkWindow(activeNetwork);
+        //console.log(`Fetching window configuration for network: ${activeNetwork}...`);
+        //await fetchNetworkWindow(activeNetwork);
 
         // Get the total window size
-        console.log('Fetching total window size...');
-        await getTotalWindowSize();
+        //console.log('Fetching total window size...');
+        //await getTotalWindowSize();
 
         // Fetch all jobs and test their workability with the active master network
         console.log('Fetching jobs...');
