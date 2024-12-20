@@ -1,11 +1,10 @@
 import { createPublicClient, http, Address, Abi } from 'viem';
-import { mainnet, sepolia } from 'viem/chains';
+import { mainnet } from 'viem/chains';
 
 export const RPC_URL = process.env.RPC_URL || '';
 
 export const client = createPublicClient({
     chain: mainnet,
-    //chain: sepolia,
     transport: http(RPC_URL),
 });
 

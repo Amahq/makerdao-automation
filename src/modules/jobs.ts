@@ -1,8 +1,7 @@
 import { client, sequencerAbi, sequencerAddress, jobAbi } from './config';
 import { Address, Hex, padHex, stringToHex } from 'viem';
-import { decodeFromBytes32, isContract } from './utils';
+import { decodeFromBytes32, encodeToBytes32, isContract } from './utils';
 import { getMasterNetwork } from './sequencer';
-import { promises } from 'dns';
 import { workableJob } from '../Entities/workableJob';
 
 
@@ -88,9 +87,8 @@ export async function fetchJobTimer(jobAddress: Address): Promise<void> {
     }
 }
 
-export async function getNextJobs(network: string): Promise<{ job: string; canWork: boolean; args: string }[]> {
+export async function getNextJobs(network: string): Promise<workableJob[]> {
     try {
-        //const network = `0x${Buffer.from(networkName).toString('hex').padEnd(64, '0')}`;
         const networkName = decodeFromBytes32(network);
 
         const nextJobs = await client.readContract({
@@ -98,10 +96,23 @@ export async function getNextJobs(network: string): Promise<{ job: string; canWo
             abi: sequencerAbi,
             functionName: 'getNextJobs',
             args: [network],
-        });
+        }) as workableJob[];
 
-        console.log(`Next jobs for network ${networkName}:`, nextJobs);
-        return nextJobs as { job: string; canWork: boolean; args: string }[];
+        const returnedValue: workableJob[] = [];
+        console.log(`Next jobs for network ${networkName}:`);
+        nextJobs.forEach(function (value) {
+            var tempJob: workableJob = {
+                job: encodeToBytes32(value.job) as Hex,
+                canWork: value.canWork,
+                args: decodeFromBytes32(value.args)
+            }
+            returnedValue.push(tempJob);
+            console.log(`JobAddress : ${decodeFromBytes32(tempJob.job)}`);
+            console.log(`canWork : ${tempJob.canWork}`);
+            console.log(`args : ${decodeFromBytes32(tempJob.args)} (${tempJob.args})`);
+        });
+        //console.log(returnedValue);
+        return returnedValue;
     } catch (error) {
         console.error('Error fetching next jobs:', error);
         throw error;
@@ -157,7 +168,8 @@ export async function checkWorkable(jobAddress: Address): Promise<boolean> {
     try {
 
         const activeNetwork = await getMasterNetwork();
-        const network = padHex(stringToHex(activeNetwork), { size: 32 });
+        //const network = padHex(stringToHex(activeNetwork), { size: 32 });
+        const network = encodeToBytes32(activeNetwork) as Address;
 
         const [canWork, args] = await client.readContract({
             address: jobAddress,

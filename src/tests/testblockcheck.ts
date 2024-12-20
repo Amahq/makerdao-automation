@@ -1,12 +1,21 @@
 import { client } from '../modules/config'; // Adjust the path if needed
-import { fetchWorkEvents } from '../modules/jobs'; // Path to the fetchWorkEvents function
-import { Address } from 'viem';
+import { fetchWorkEvents, getNextJobs } from '../modules/jobs'; // Path to the fetchWorkEvents function
+import { Address, Hex } from 'viem';
+import { getMasterNetwork } from '../modules/sequencer';
+import { decodeFromBytes32, encodeToBytes32 } from '../modules/utils';
+import { workableJob } from '../Entities/workableJob';
 
 async function main() {
     try {
         // Fetch the latest block
         const latestBlock = await client.getBlockNumber();
+        const activeNetwork = await getMasterNetwork();
+        const jobs = await getNextJobs(activeNetwork);
 
+        const jobAddresses: Address[] = [];
+        jobs.forEach(function (value) {
+            jobAddresses.push(value.job);
+        })
         console.log(`Latest Block: ${latestBlock}`);
 
         // Define the range to search for logs
