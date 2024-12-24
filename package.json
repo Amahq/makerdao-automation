@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Automation tool for MakerDAO jobs using TypeScript and Viem",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
