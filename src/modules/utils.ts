@@ -5,6 +5,10 @@ export function encodeToBytes32(input: string): string {
     return `0x${Buffer.from(input).toString('hex').padEnd(64, '0')}`;
 }
 
+export function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
 /**
  * Decode bytes32 hex to UTF-8 string and remove null bytes
  * @param input - The string to be Decoded
@@ -31,26 +35,5 @@ export async function isContract(address: Address): Promise<boolean> {
     return code !== undefined && code !== '0x';
 }
 
-export async function fetchLerpFactoryCount(lerpFactoryAddress: Address): Promise<void> {
-    try {
-        const count = await client.readContract({
-            address: lerpFactoryAddress,
-            abi: [
-                {
-                    type: 'function',
-                    name: 'count',
-                    stateMutability: 'view',
-                    inputs: [],
-                    outputs: [{ type: 'uint256' }],
-                },
-            ],
-            functionName: 'count',
-        });
-
-        console.log(`\n LerpFactory Count: ${count} \n`);
-    } catch (error) {
-        console.error('\n Error fetching LerpFactory count:', error, '\n');
-    }
-}
 
 // Add more utility functions here

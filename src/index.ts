@@ -1,14 +1,15 @@
 import { getMasterNetwork, listNetworks } from './modules/sequencer';
 import { testAllJobs, testJobWithNetwork } from './tests/testJobs';
-import { fetchLerpFactoryCount } from './modules/utils';
 import { fetchNetworkWindow, getTotalWindowSize } from './modules/networks';
 import { fetchJobs, getNextJobs } from './modules/jobs';
+import * as dotenv from 'dotenv';
 
 import { Address, Hex } from 'viem';
 
 async function main() {
+    dotenv.config();
     // Define the job address and LerpFactory address
-    const lerpFactoryAddress: Address = '0x9175561733D138326FDeA86CdFdF53e92b588276'; // Replace with actual address
+    //const lerpFactoryAddress: Address = '0x9175561733D138326FDeA86CdFdF53e92b588276'; // Replace with actual address
 
     try {
 

@@ -3,7 +3,76 @@ import { Address, Hex, padHex, stringToHex } from 'viem';
 import { decodeFromBytes32, encodeToBytes32, isContract } from './utils';
 import { getMasterNetwork } from './sequencer';
 import { workableJob } from '../Entities/workableJob';
+import { updateLastWorkedBlockInStorage, getLastWorkedBlockFromStorage } from '../Persistence/storage';
+import { sendDiscordAlert } from '../Discord/alerts';
+import { erc20Abi } from 'viem';
 
+const INACTIVITY_BLOCK_THRESHOLD = 100n;
+
+export async function checkInactivity(jobAddresses: Address[]) {
+    const currentBlock = await client.getBlockNumber();
+    for (const job of jobAddresses) {
+        const lastWorked = getLastWorkedBlockFromStorage(job);
+        if (lastWorked === 0n) {
+            // If we never recorded a work, assume it's inactive or handle gracefully.
+            continue;
+        }
+        const blocksSinceWorked = currentBlock - lastWorked;
+        if (blocksSinceWorked >= INACTIVITY_BLOCK_THRESHOLD) {
+            await sendDiscordAlert(`Job ${job} has not been worked for ${blocksSinceWorked} blocks.`);
+        }
+    }
+}
+
+
+async function updateLastWorkedBlocks(jobAddresses: Address[]) {
+    const latestBlock = await client.getBlockNumber();
+    const blocksToSearchBack = 200n; // For example, search last 200 * ~15s = 50 min
+    const fromBlock = latestBlock - blocksToSearchBack > 0n ? latestBlock - blocksToSearchBack : 0n;
+
+    const logs = await fetchWorkEvents(jobAddresses, fromBlock, latestBlock);
+    
+    // parse logs: each log has a blockNumber and job address
+    for (const log of logs) {
+        const logBlock = BigInt(log.blockNumber);
+        const currentStored = getLastWorkedBlockFromStorage(log.address);
+        if (logBlock > currentStored) {
+            updateLastWorkedBlockInStorage(log.address, logBlock);
+        }
+    }
+}
+
+export async function fetchAllWorkEvents(jobAddresses: Address) {
+
+    /* const logs = await client.getContractEvents({
+        address: jobAddresses,
+        event: {
+            type: 'event', // Specify the type as 'event'
+            name: 'Work',
+            inputs: [
+                { type: 'bytes32', indexed: true }, // Network (indexed in the Solidity event)
+                { type: 'bytes32', indexed: true }, // Ilk (indexed in the Solidity event)
+            ],
+        },
+        fromBlock,
+        toBlock,
+    }); */
+
+    const logs = await client.getContractEvents({ 
+        address: jobAddresses,
+        abi: erc20Abi,
+        //eventName: 'Transfer'
+        /* args: {
+          from: '0xd8da6bf26964af9d7eed9e03e53415d37aa96045',
+          to: '0xa5cc3c03994db5b0d9a5eedd10cabab0813678ac'
+        },
+        fromBlock: 16330000n,
+        toBlock: 16330050n */
+      })
+
+    console.log("fetchWorkEvents - ", logs);
+    return logs;
+}
 
 export async function fetchWorkEvents(jobAddresses: Address[], fromBlock: bigint, toBlock: bigint) {
 
@@ -171,16 +240,16 @@ export async function checkWorkable(jobAddress: Address): Promise<boolean> {
         //const network = padHex(stringToHex(activeNetwork), { size: 32 });
         const network = encodeToBytes32(activeNetwork) as Address;
 
-        const [canWork, args] = await client.readContract({
+        /* const [canWork, args] = await client.readContract({
             address: jobAddress,
             abi: jobAbi,
             functionName: 'workable',
             args: [network],
-        });
+        }); */
 
-        console.log(`Job ${jobAddress} is workable: ${canWork}`);
-        console.log(`Additional data returned (args):`, args);
-        return canWork;
+        /* console.log(`Job ${jobAddress} is workable: ${canWork}`);
+        console.log(`Additional data returned (args):`, args); */
+        return false;
     } catch (error) {
         console.error(`Error checking workable for job ${jobAddress}:`, error);
         return false;
