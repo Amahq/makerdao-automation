@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "Automation tool for MakerDAO jobs using TypeScript and Viem",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "dev": "node --loader ts-node/esm src/index.ts",
-    "lint": "eslint . --ext .ts",
-    "test": "jest"
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint .",
+    "test": "jest",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "prettier:fix": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
   },
   "keywords": [
     "makerdao",

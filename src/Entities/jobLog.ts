@@ -1,7 +1,6 @@
-import { Address } from "viem"
+import { Address } from 'viem';
 
-
-export type jobLog = {
-    job: Address,
-    amountOfWorkDone: number
-}
+export type JobLog = {
+  job: Address;
+  amountOfWorkDone: number;
+};

@@ -1,17 +1,20 @@
-import { AbiEvent, Address } from "viem";
-import { client, jobAbi } from "../modules/config";
+import { AbiEvent, Address } from 'viem';
+import { client } from '../config';
 
+export async function getEvents(
+  address: Address[],
+  amountOfBlocks: bigint,
+  eventAbi?: AbiEvent,
+): Promise<unknown[]> {
+  const currentBlock = await client.getBlockNumber();
+  const targetBlock = currentBlock - amountOfBlocks;
 
-export async function getEvents(address: Address[], eventName: string, amountOfBlocks: bigint, eventAbi?: AbiEvent): Promise<unknown[]> {
-    const currentBlock = await client.getBlockNumber();
-    const targetBlock = currentBlock - amountOfBlocks;
+  const logs = await client.getLogs({
+    address: address,
+    event: eventAbi,
+    fromBlock: targetBlock,
+    toBlock: 'latest',
+  });
 
-    const logs = await client.getLogs({
-        address: address,
-        event: eventAbi,
-        fromBlock: targetBlock,
-        toBlock: 'latest',
-    });
-
-    return logs;
+  return logs;
 }

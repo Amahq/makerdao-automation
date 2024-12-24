@@ -1,7 +1,7 @@
-import { Address } from "viem";
-import { contract } from "../Entities/contract";
-import { workableJob } from "../Entities/workableJob";
-import { client, sequencerAbi, sequencerAddress } from "../modules/config";
+import { Address } from 'viem';
+import { sequencerAbi } from '../utils';
+import { client, getEnvs } from '../config';
+import { Contract } from '../entities';
 
 /**
  * Fetches the indicated job from the Sequencer contract.
@@ -9,30 +9,27 @@ import { client, sequencerAbi, sequencerAddress } from "../modules/config";
  * @returns Promise<workableJob> - The obtained of jobs.
  */
 export async function getJobs(amountOfJobs: bigint): Promise<Address[]> {
-    try {
-
-        var calls: contract[] =[] 
-        for( let i = 0; i < amountOfJobs; i++){
-            const call: contract = {
-                address:sequencerAddress,
-                abi:sequencerAbi,
-                functionName:'jobAt',
-                args:[i]
-            }
-            calls.push(call);
-        }
-
-        const results = await client.multicall(
-            {
-                contracts: calls,
-                allowFailure: false,
-            }
-        ) as Address[]
-
-        return results;
-    } catch (error) {
-        const errMsg = (`Error fetching job at index ${0}: ${error}`);
-        console.error('\n', errMsg ,'\n');
-        throw new Error(`Error fetching job at index ${0}`);
+  try {
+    let calls: Contract[] = [];
+    for (let i = 0; i < amountOfJobs; i++) {
+      const call: Contract = {
+        address: getEnvs().SEQUENCER_ADDRESS as Address,
+        abi: sequencerAbi,
+        functionName: 'jobAt',
+        args: [i],
+      };
+      calls.push(call);
     }
+
+    const results = (await client.multicall({
+      contracts: calls,
+      allowFailure: false,
+    })) as Address[];
+
+    return results;
+  } catch (error) {
+    const errMsg = `Error fetching job at index ${0}: ${error}`;
+    console.error('\n', errMsg, '\n');
+    throw new Error(`Error fetching job at index ${0}`);
+  }
 }

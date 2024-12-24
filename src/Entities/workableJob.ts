@@ -1,8 +1,7 @@
-import { Address } from "viem"
+import { Address } from 'viem';
 
-
-export type workableJob = {
-    job: Address,
-    canWork: boolean,
-    args: string
-}
+export type WorkableJob = {
+  job: Address;
+  canWork: boolean;
+  args: string;
+};

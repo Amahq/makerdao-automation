@@ -1,9 +1,8 @@
-import { Abi, AbiEvent, Address } from "viem"
+import { AbiEvent, Address } from 'viem';
 
-
-export type contractEvent = {
-    address: Address,
-    abi: AbiEvent,
-    eventName: string,
-    nomberOfBlocks: BigInt
-}
+export type ContractEvent = {
+  address: Address;
+  abi: AbiEvent;
+  eventName: string;
+  nomberOfBlocks: BigInt;
+};

@@ -4,7 +4,7 @@ import { Address } from 'viem';
 type JobHistory = {
   [job: Address]: {
     lastWorkedBlock: string; // store as string to avoid JSON int issues
-  }
+  };
 };
 
 const STORAGE_FILE = '../Data/jobHistory.json';
@@ -24,7 +24,10 @@ export function getLastWorkedBlockFromStorage(job: Address): bigint {
   return store[job]?.lastWorkedBlock ? BigInt(store[job].lastWorkedBlock) : 0n;
 }
 
-export function updateLastWorkedBlockInStorage(job: Address, blockNumber: bigint) {
+export function updateLastWorkedBlockInStorage(
+  job: Address,
+  blockNumber: bigint,
+) {
   const store = readStorage();
   store[job] = { lastWorkedBlock: blockNumber.toString() };
   writeStorage(store);
