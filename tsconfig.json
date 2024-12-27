@@ -9,6 +9,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "Entities/contract.ts", "Entities/contractEvent.ts", "Entities/contractLog.ts", "Entities/jobLog.ts", "Entities/workableJob.ts"],
   "exclude": ["node_modules", "**/*.test.ts", "__tests__"]
 }
