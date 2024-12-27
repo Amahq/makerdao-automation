@@ -1,7 +1,7 @@
 import { Address } from 'viem';
 import { sequencerAbi } from '../utils';
 import { client, getEnvs } from '../config';
-import { Contract } from '../entities';
+import { contract } from '../entities';
 
 /**
  * Fetches the indicated job from the Sequencer contract.
@@ -10,9 +10,9 @@ import { Contract } from '../entities';
  */
 export async function getJobs(amountOfJobs: bigint): Promise<Address[]> {
   try {
-    let calls: Contract[] = [];
+    let calls: contract[] = [];
     for (let i = 0; i < amountOfJobs; i++) {
-      const call: Contract = {
+      const call: contract = {
         address: getEnvs().SEQUENCER_ADDRESS as Address,
         abi: sequencerAbi,
         functionName: 'jobAt',

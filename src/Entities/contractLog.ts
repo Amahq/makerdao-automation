@@ -1,6 +1,6 @@
 import { Address } from 'viem';
 
-export type ContractLog = {
+export type contractLog = {
   address: Address;
   blockHash: string;
   blockNumber: BigInt;

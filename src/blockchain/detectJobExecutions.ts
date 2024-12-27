@@ -1,16 +1,16 @@
 import { Address } from 'viem';
-import { ContractLog, JobLog } from '../entities';
+import { contractLog, jobLog } from '../entities';
 import { getEvents } from './getEvents';
 
 export async function detectJobExecutions(
   jobs: Address[],
   blocksToCheck: bigint,
-): Promise<JobLog[]> {
-  let jobLogDone: { [id: string]: JobLog } = {};
-  const returnedValue: JobLog[] = [];
+): Promise<jobLog[]> {
+  let jobLogDone: { [id: string]: jobLog } = {};
+  const returnedValue: jobLog[] = [];
 
   //The job executions are obtained by getting all the logs of the "Work" events found in the jobs addresses.
-  const logs = (await getEvents(jobs, blocksToCheck)) as ContractLog[];
+  const logs = (await getEvents(jobs, blocksToCheck)) as contractLog[];
 
   jobs.forEach((job) => {
     jobLogDone[job.toLowerCase()] = { job: job, amountOfWorkDone: 0 };

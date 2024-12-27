@@ -1,6 +1,6 @@
 import { Address } from 'viem';
 
-export type JobLog = {
+export type jobLog = {
   job: Address;
   amountOfWorkDone: number;
 };

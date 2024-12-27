@@ -1,6 +1,6 @@
 import { AbiEvent, Address } from 'viem';
 
-export type ContractEvent = {
+export type contractEvent = {
   address: Address;
   abi: AbiEvent;
   eventName: string;
