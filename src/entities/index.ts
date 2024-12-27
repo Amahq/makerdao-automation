@@ -1,5 +1,5 @@
-export { contract } from '../../Entities/contract';
-export { contractEvent } from '../../Entities/contractEvent';
-export { contractLog } from '../../Entities/contractLog';
-export { jobLog } from '../../Entities/jobLog';
-export { workableJob } from '../../Entities/workableJob';
+export { contract } from './contract';
+export { contractEvent } from './contractEvent';
+export { contractLog } from './contractLog';
+export { jobLog } from './jobLog';
+export { workableJob } from './workableJob';
