@@ -53,7 +53,7 @@ export const sequencerAbi = [
     outputs: [{ type: 'bytes32' }],
   },
 ] satisfies Abi;
-// A chequear esto *-*
+
 // Job contract ABI
 export const jobAbi = [
   {

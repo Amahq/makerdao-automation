@@ -6,7 +6,7 @@ const blockchain_1 = require("./blockchain");
 async function main() {
     try {
         const numberOfJobs = await (0, blockchain_1.getNumJobs)();
-        const amountOfJobs = 170n;
+        const amountOfJobs = 100n;
         const jobs = await (0, blockchain_1.getJobs)(numberOfJobs);
         const jobEventsDetected = await (0, blockchain_1.detectJobExecutions)(jobs, amountOfJobs);
         let notificationMessage = '';
@@ -27,10 +27,7 @@ async function main() {
 }
 // Interval in milliseconds (e.g., 5 minutes = 5 * 60 * 1000 ms)
 const intervalInMilliseconds = 14000; // Change this value to your desired interval
-console.log('This message only appears before the interval');
 // Start the interval
 setInterval(() => {
-    console.log('This message only appears inside the interval');
     main();
 }, intervalInMilliseconds);
-console.log('This message only appears after the interval');
