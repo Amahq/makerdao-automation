@@ -29,8 +29,15 @@ async function detectJobExecutions(jobs, blocksToCheck) {
     // Iterate through the logs to aggregate the number of executions for each job
     logs.forEach((log) => {
         try {
-            // Increment the work done count for the job corresponding to the log address
-            jobLogDone[log.address].amountOfWorkDone += 1;
+            // Normalize address
+            const lowerCaseAddress = log.address.toLowerCase();
+            if (lowerCaseAddress && jobLogDone[lowerCaseAddress]) {
+                // Increment the work done count for the job corresponding to the log address
+                jobLogDone[lowerCaseAddress].amountOfWorkDone += 1;
+            }
+            else {
+                throw new Error(`Log address ${log.address} does not match any job`);
+            }
         }
         catch (error) {
             // Handle cases where the log address does not match a job address

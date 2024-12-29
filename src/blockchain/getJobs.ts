@@ -20,6 +20,9 @@ import { contract } from '../entities';
  */
 export async function getJobs(amountOfJobs: bigint): Promise<Address[]> {
   try {
+    if (!amountOfJobs || amountOfJobs == 0n) {
+      throw new Error('The amount of Jobs should be bigger than 0.');
+    }
     let calls: contract[] = [];
 
     // Construct a multicall for each job index

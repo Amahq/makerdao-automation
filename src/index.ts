@@ -1,6 +1,9 @@
 require('dotenv').config();
+import { env } from 'process';
 import { sendDiscordAlert } from './alerts/discord';
 import { detectJobExecutions, getJobs, getNumJobs } from './blockchain';
+import { envs } from './config/env';
+import { getEnvs } from './config';
 
 /**
  * Main function to monitor jobs on the Sequencer contract.
@@ -18,6 +21,10 @@ async function main() {
     // Fetch the total number of jobs
     const numberOfJobs = await getNumJobs();
 
+    if (!numberOfJobs || numberOfJobs == 0n) {
+      console.log('Failed to get the jobs.');
+      return;
+    }
     // Define the block range to monitor
     const amountOfBlocks = 100n;
 
@@ -47,10 +54,7 @@ async function main() {
 }
 
 // Interval in milliseconds (e.g., 5 minutes = 5 * 60 * 1000 ms)
-const intervalInMilliseconds = parseInt(
-  process.env.EXECUTION_INVERTAL as string,
-  10,
-); // Change this value to your desired interval
+const intervalInMilliseconds = getEnvs().EXECUTION_INVERTAL;
 
 /**
  * Starts the monitoring process at a regular interval.

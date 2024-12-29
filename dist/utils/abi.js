@@ -54,7 +54,6 @@ exports.sequencerAbi = [
         outputs: [{ type: 'bytes32' }],
     },
 ];
-// A chequear esto *-*
 // Job contract ABI
 exports.jobAbi = [
     {

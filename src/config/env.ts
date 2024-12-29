@@ -19,5 +19,5 @@ export const envs = {
   ETHERSCAN_API_URL: process.env.ETHERSCAN_API_URL || '', // Etherscan API URL
   ETHERSCAN_BASE_API_URL: process.env.ETHERSCAN_BASE_API_URL || '', // Base Etherscan API URL
   SEQUENCER_ADDRESS: process.env.SEQUENCER_ADDRESS || '', // Sequencer contract address
-  EXECUTION_INVERTAL: 14000, // Execution interval in milliseconds
+  EXECUTION_INVERTAL: 30000 as number, // Execution interval in milliseconds
 };
